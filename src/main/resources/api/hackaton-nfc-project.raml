@@ -1,0 +1,114 @@
+#%RAML 1.0
+title: Hackaton Nfc API
+version: v1
+mediaType: application/json
+
+/users:
+  get:
+    description: Retrieve a list of all users.
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              [
+                {
+                  "id": "unique_user_id_1",
+                  "name": "John Doe"
+                },
+                {
+                  "id": "unique_user_id_2",
+                  "name": "Jane Smith"
+                }
+              ]
+  post:
+    description: Create a new user.
+    body:
+      application/json:
+        example: |
+          {
+            "name": "John Doe",
+            "email": "john.doe@example.com"
+          }
+    responses:
+      201:
+        body:
+          application/json:
+            example: |
+              {
+                "id": "unique_user_id",
+                "name": "John Doe"
+              }
+
+  /{userId}:
+    uriParameters:
+      userId:
+        description: The unique identifier of the user.
+        type: string
+    get:
+      description: Retrieve a specific user by their ID.
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                {
+                  "id": "unique_user_id",
+                  "name": "John Doe"
+                }
+        404:
+          description: User not found.
+    put:
+      description: Update an existing user by their ID.
+      body:
+        application/json:
+          example: |
+            {
+              "name": "John Doe",
+              "email": "john.doe@example.com"
+            }
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                {
+                  "id": "unique_user_id",
+                  "name": "John Doe"
+                }
+        404:
+          description: User not found.
+    delete:
+      description: Delete a specific user by their ID.
+      responses:
+        204:
+          description: User deleted successfully.
+        404:
+          description: User not found.
+
+/auth:
+  get:
+    description: Authenticate a user using their ID.
+    queryParameters:
+      id:
+        description: The unique identifier of the user.
+        type: string
+        required: true
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {
+                "status": "success",
+                "message": "User authenticated"
+              }
+      401:
+        description: Authentication failed.
+        body:
+          application/json:
+            example: |
+              {
+                "status": "failure",
+                "message": "Authentication failed"
+              }

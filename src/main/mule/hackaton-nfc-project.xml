@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:mongo="http://www.mulesoft.org/schema/mule/mongo"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/mongo http://www.mulesoft.org/schema/mule/mongo/current/mule-mongo.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="5798edbc-0868-4cc6-a808-b36d81611ecc" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<mongo:config name="MongoDB_Config" doc:name="MongoDB Config" doc:id="aeea6208-3e98-4231-8ed8-a6fda217423e" >
+		<mongo:connection-string-connection connectionString="mongodb+srv://sydneymondestin:6mF558eAWHp2uv1Q@estiam.1ky5lce.mongodb.net/test" />
+	</mongo:config>
+	<flow name="hackaton-nfc-projectFlow" doc:id="cda163cf-9d82-4d31-a5c7-6fe94215d095" >
+		<http:listener doc:name="Listener" doc:id="b4d80d13-189a-415d-b549-fe0ed1c3eb13" config-ref="HTTP_Listener_config" path="/test">
+			<http:response statusCode="302" >
+			</http:response>
+		</http:listener>
+		<logger level="INFO" doc:name="Logger" doc:id="051efcc2-d655-44ee-87ab-5fa8b22af71e" />
+		<mongo:find-documents collectionName="users" fields="," doc:name="Find documents" doc:id="d0c5a65d-9878-4cf0-8477-2532e9336afe" config-ref="MongoDB_Config">
+		</mongo:find-documents>
+		<ee:transform doc:name="Transform Message" doc:id="44405dae-fa2e-45cb-8ed2-e57e3e7f09c7" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json	
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger1" doc:id="0e2edbe6-4d12-4381-af24-bb87a69c3c2f" />
+	</flow>
+</mule>
